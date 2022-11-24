@@ -22,6 +22,8 @@ const refs = {
 refs.startBtn.addEventListener('click', onStartBtnClick);
 refs.stopBtn.addEventListener('click', onStopBtnClick);
 
+let idInterval = null;
+
 function onStartBtnClick() {
   //перевірямо кнопку на активність
   disabledBtn();
