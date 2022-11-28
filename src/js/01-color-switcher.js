@@ -26,7 +26,8 @@ let idInterval = null;
 
 function onStartBtnClick() {
   //перевірямо кнопку на активність
-  disabledBtn();
+  refs.startBtn.disabled = true;
+  refs.stopBtn.disabled = false;
   //визначаємо айді інтервалу, який виконуться
   idInterval = setInterval(() => {
     const randomColor = getRandomHexColor();
@@ -35,18 +36,19 @@ function onStartBtnClick() {
 }
 function onStopBtnClick() {
   //перевірямо кнопку на активність
-  disabledBtn();
+  refs.startBtn.disabled = false;
+  refs.stopBtn.disabled = true;
   //знімамо інтервал з визначеним айді
   clearInterval(idInterval);
 }
-function disabledBtn() {
-  if (refs.startBtn.disabled) {
-    //якщо твердження тру, то треба його змінити на фолс(якщо кнопка старт вже disabled то треба її зробити активною, а кнопку стоп - неактивною)
-    refs.startBtn.disabled = false;
-    refs.stopBtn.disabled = true;
-  } else {
-    //якщо кнопка старт активна, то її треба зробити неактивною, а кнопку стоп - активною
-    refs.startBtn.disabled = true;
-    refs.stopBtn.disabled = false;
-  }
-}
+// function disabledBtn() {
+//   if (refs.startBtn.disabled) {
+//     //якщо твердження тру, то треба його змінити на фолс(якщо кнопка старт вже disabled то треба її зробити активною, а кнопку стоп - неактивною)
+//     refs.startBtn.disabled = false;
+//     refs.stopBtn.disabled = true;
+//   } else {
+//     //якщо кнопка старт активна, то її треба зробити неактивною, а кнопку стоп - активною
+//     refs.startBtn.disabled = true;
+//     refs.stopBtn.disabled = false;
+//   }
+// }
