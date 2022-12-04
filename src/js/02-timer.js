@@ -13,6 +13,8 @@ const refs = {
 refs.startBtn.addEventListener('click', onStartBtnClick);
 //start button is diabled at the beginning, only after choosing it`s active
 refs.startBtn.disabled = true;
+let idInterval = null;
+let selectedMs;
 //options for calendar flatpickr
 const options = {
   enableTime: true,
@@ -22,43 +24,42 @@ const options = {
 
   onClose(selectedDates) {
     //дата яку обрали в повному форматі
-    console.log(selectedDates[0]);
+    // console.log(selectedDates[0]);
     //дата яку обрали в мілісекундах від 70го року
     selectedMs = selectedDates[0].getTime();
-    console.log(selectedMs);
+    // console.log(selectedMs);
 
-    if (selectedMs < new Date()) {
+    if (selectedMs < Date.now()) {
       return window.alert('Please choose a date in the future');
     }
-    if (selectedMs > new Date()) {
-      refs.startBtn.disabled = false;
-    }
+  refs.startBtn.disabled = false;
     //дата в повному форматі яка в даний момент
-    console.log(new Date());
+    // console.log(Date.now());
   },
 };
 
 //підключаємо календарик, в selector передамо інпут, а в otions - options
 flatpickr('#datetime-picker', options);
 
-let idInterval = null;
-let counterObject = {};
 function onStartBtnClick() {
+  refs.startBtn.disabled = true;
   idInterval = setInterval(() => {
     //Значення каунтера це різниця між часом у мілісекундах обраним зараз і часом у мілісекундах на момент вибору
-    const countdown = selectedMs - new Date().getTime();
-    if (countdown < 0) {
+    const currentTime = Date.now();
+    if (currentTime >= selectedMs) {
       clearInterval(idInterval);
       return;
     }
-    counterObject = convertMs(countdown);
-    updateCounter(addLeadingZero(counterObject));
+    let countdown = selectedMs - currentTime;
+    updateCounter(convertMs(countdown));
   }, 1000);
 }
 
-//додамо до дати формат 00:00:00
-function addLeadingZero(value) {
-  return String(value).padStart(2, '0');
+function updateCounter({ days, hours, minutes, seconds }) {
+  refs.days.textContent = `${days}`;
+  refs.hours.textContent = `${hours}`;
+  refs.minutes.textContent = `${minutes}`;
+  refs.seconds.textContent = `${seconds}`;
 }
 
 //підраховумо введене значення для виведення в таймер
@@ -70,21 +71,22 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 }
-function updateCounter({ days, hours, minutes, seconds }) {
-  refs.days.textContent = days;
-  refs.hours.textContent = hours;
-  refs.minutes.textContent = minutes;
-  refs.seconds.textContent = seconds;
+
+//додамо до дати формат 00:00:00
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
 }
 
 // Виконуй це завдання у файлах 02-timer.html і 02-timer.js. Напиши скрипт таймера, який здійснює зворотний відлік до певної дати. Такий таймер може використовуватися у блогах та інтернет-магазинах, сторінках реєстрації подій, під час технічного обслуговування тощо. Подивися демо-відео роботи таймера.
