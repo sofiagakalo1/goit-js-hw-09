@@ -1,10 +1,48 @@
-function createPromise(position, delay) {
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
+const form = document.querySelector('.form');
+
+form.addEventListener('submit', onSubmitBtnClick);
+
+console.log(form.elements);
+
+function createPromise(delay) {
   const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-  } else {
-    // Reject
+
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve();
+      } else {
+        reject();
+      }
+    }, delay);
+  });
+}
+
+function onSubmitBtnClick(event) {
+  event.preventDefault();
+
+  let delay = Number(form.elements.delay.value);
+  let step = Number(form.elements.step.value);
+  let amount = Number(form.elements.amount.value);
+
+    if (delay < 0 || step < 0 || amount <= 0) {
+      Notify.warning('Зповніть вcі поля коректно!');
+      return;
+    }
+  
+  for (let position = 1; position <= amount; position += 1) {
+    createPromise(delay)
+      .then(() => {
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      })
+      .catch(() => {
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      });
+    delay += step;
   }
+  // event.currentTarget.reset();
 }
 
 // Виконуй це завдання у файлах 03-promises.html і 03-promises.js. Подивися демо-відео роботи генератора промісів.
