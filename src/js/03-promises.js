@@ -42,7 +42,7 @@ function onSubmitBtnClick(event) {
       });
     delay += step;
   }
-  // event.currentTarget.reset();
+  event.currentTarget.reset();
 }
 
 // Виконуй це завдання у файлах 03-promises.html і 03-promises.js. Подивися демо-відео роботи генератора промісів.
