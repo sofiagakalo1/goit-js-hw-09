@@ -12,9 +12,9 @@ function createPromise(delay) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (shouldResolve) {
-        resolve();
+        resolve(delay);
       } else {
-        reject();
+        reject(delay);
       }
     }, delay);
   });
@@ -34,10 +34,10 @@ function onSubmitBtnClick(event) {
   
   for (let position = 1; position <= amount; position += 1) {
     createPromise(delay)
-      .then(() => {
+      .then(delay => {
         Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
       })
-      .catch(() => {
+      .catch(delay => {
         Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
       });
     delay += step;
